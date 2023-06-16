@@ -5,7 +5,7 @@
 #include <Arduino_JSON.h>
 #include <ESP8266WebServer.h>
 
-const char *ssid = "KARAN";
+const char *ssid = "Kicap Karan";
 const char *password = "12345679";
 
 ESP8266WebServer server(80);
@@ -26,7 +26,6 @@ void handleRelayOn() {
   response["message"] = "Relay turned on";
   String jsonString = JSON.stringify(response);
   server.send(200, "application/json", jsonString);
-
 }
 
 void handleRelayOff() {
@@ -35,6 +34,14 @@ void handleRelayOff() {
   JSONVar response;
   response["status"] = "success";
   response["message"] = "Relay turned off";
+  String jsonString = JSON.stringify(response);
+  server.send(200, "application/json", jsonString);
+}
+
+void handleRelayState() {
+  JSONVar response;
+  response["status"] = "success";
+  response["relayState"] = relayState;
   String jsonString = JSON.stringify(response);
   server.send(200, "application/json", jsonString);
 }
@@ -56,6 +63,7 @@ void setup() {
   server.on("/", handleRoot);
   server.on("/relay/on", handleRelayOn);
   server.on("/relay/off", handleRelayOff);
+  server.on("/relay/state", handleRelayState);
   server.begin();
 }
 
